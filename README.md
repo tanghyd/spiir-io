@@ -6,7 +6,7 @@ Last Updated: 25/03/22
 
 ## Installation
 
-We recommend first installing Python3 in a virtual environment of your choice, and
+We recommend first installing Python3 in a virtual environment of your choice, which
 should work perfectly fine for Python3.6 to Python3.8 (from testing).
 
 For example, a venv based virtual environment would use:
@@ -23,6 +23,7 @@ A conda environment would be created with:
 
 Then this local package can be installed inside the virtual environment with:
 
+    git clone https://github.com/tanghyd/spiir.git && cd spiir
     pip install -e .
 
 
@@ -33,7 +34,7 @@ handle SPIIR's `PostcohInspiralTable` in Python3 - in particular we have written
 to include this custom table in the list of available lsctables.
 
 As we have not integrated this with `python-ligo-lw` and `gwpy` modules directly,
-we have to add our table manually (see spiir.io.ligolw.postcoh.py#L150). In order for
+we have to add our table manually (see `spiir.io.ligolw.postcoh.py#L150`). In order for
 modules like `gwpy` to recognise the `PostcohInspiralTable` schema, we must first import
 this package before `gwpy` as follows:
 
@@ -70,10 +71,14 @@ We tried testing this package on a modern Python3.10 installation but ran into s
 compatibility errors with ilwd:char types with `ligol.lw.ligolw`. While its likely this
 may have been due to an incorrect installation or build, it's also possible that support
 for the legacy format of ligolw may have been deprecated in the more modern versions of
-these package dependencies. 
+these package dependencies. The tail end of this error is shown below:
 
-While we aim to fix this in the future, any feedback on package compatibility from
-users running Python versions above Python3.8 would be appreciated.
+    ligo.lw.ligolw.ElementError: line 14: invalid type 'ilwd:char' for Column 'process_id' in Table 'process', expected type 'int_8s'
+
+Fixes would include modern and legacy format handling for `ilwd:char` types, or
+deprecating the legacy version of the `PostcohInspiralTable` for more modern formats.
+For now, any feedback on package compatibility from users running Python versions
+above Python3.8 would be appreciated.
 
 ## Design Principles
 
@@ -144,14 +149,13 @@ A complete SPIIR install with all sub-modules would have the import structure be
             candidates/
             catalog/
 
+        deployment/            # concern: observation runs (==> /bin? or ==> .io?)
 
-        deployment/             # concern: observation runs (==> /bin? or ==> .io?)
-
-        ml/                     # concern: utilities for mlops etc. (move .ml => .io?)
-            torch/                    # shared utils for torch models (optional?)
-                stream/                 # stream dataloaders for deployment
-                batch/                  # batch dataloaders for training
-            tf/                 # same as torch for tensorflow
+        ml/                    # concern: utilities for mlops etc. (move .ml => .io?)
+            torch/                     # shared utils for torch models (optional?)
+                stream/                # stream dataloaders for deployment
+                batch/                 # batch dataloaders for training
+            tf/                        # same as torch for tensorflow
 
 ### Hypothetical Future Usage
 

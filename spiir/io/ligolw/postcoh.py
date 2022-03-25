@@ -1,6 +1,5 @@
-import glue.ligolw
-from glue.ligolw import dbtables, table
-import ligo.lw.lsctables
+import glue.ligolw  # legacy
+import ligo.lw.lsctables  # modern
 
 from lal import LIGOTimeGPS
 from xml.sax.xmlreader import AttributesImpl
@@ -11,10 +10,11 @@ import six
 # - Port compatibility with C postcoh table
 # - Check compatibility with dbtables
 
+# database compatibility for ilwd:char - review this
+# from glue.ligolw import dbtables
 # dbtables.ligolwtypes.ToPyType["ilwd:char"] = six.text_type
 
-PostcohInspiralID = glue.ligolw.ilwd.get_ilwdchar_class("postcoh", "event_id")
-
+PostcohInspiralID = glue.ligolw.ilwd.get_ilwdchar_class(u"postcoh", u"event_id")
 
 class PostcohInspiralTable(glue.ligolw.table.Table):
     tableName = "postcoh"
@@ -119,25 +119,25 @@ TableByName = {PostcohInspiralTable.tableName: PostcohInspiralTable}
 
 def use_in(ContentHandler):
     """
-    Modify ContentHandler, a sub-class of
-    glue.ligolw.LIGOLWContentHandler, to cause it to use the Table
-    classes defined in this module when parsing XML documents.
+	Modify ContentHandler, a sub-class of
+	glue.ligolw.LIGOLWContentHandler, to cause it to use the Table
+	classes defined in this module when parsing XML documents.
 
-    Example:
+	Example:
 
-    >>> from glue.ligolw import ligolw
-    >>> class MyContentHandler(ligolw.LIGOLWContentHandler):
-    ...	pass
-    ...
-    >>> use_in(MyContentHandler)
-    <class 'glue.ligolw.lsctables.MyContentHandler'>
-    """
+	>>> from glue.ligolw import ligolw
+	>>> class MyContentHandler(ligolw.LIGOLWContentHandler):
+	...	pass
+	...
+	>>> use_in(MyContentHandler)
+	<class 'glue.ligolw.lsctables.MyContentHandler'>
+	"""
     # need to comment out the next clause in case there are other use_in performed
     # e.g. lsctables.use_in before this use_in
     # ContentHandler = table.use_in(ContentHandler)
 
     def startTable(self, parent, attrs, __orig_startTable=ContentHandler.startTable):
-        name = glue.ligolw.table.Table.TableName(attrs["Name"])
+        name = glue.ligolw.table.Table.TableName(attrs[u"Name"])
         if name in TableByName:
             return TableByName[name](attrs)
         return __orig_startTable(self, parent, attrs)
@@ -161,3 +161,4 @@ ligo.lw.lsctables.TableByName.update(TableByName)
 # >>> import spiir.io.ligolw.postcoh
 # >>> "postcoh" in lsctables.TableByName
 # True
+
