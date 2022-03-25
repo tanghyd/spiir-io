@@ -1,4 +1,4 @@
-# Summed Parallel Infinite Impulse Response (SPIIR) Software Package
+# SPIIR Software Package
 
 Author: Daniel Tang
 
