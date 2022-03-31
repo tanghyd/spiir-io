@@ -79,5 +79,3 @@ Fixes would include modern and legacy format handling for `ilwd:char` types, or
 deprecating the legacy version of the `PostcohInspiralTable` for more modern formats.
 For now, any feedback on package compatibility from users running Python versions
 above Python3.8 would be appreciated.
-
-```
