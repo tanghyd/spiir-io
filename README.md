@@ -167,7 +167,7 @@ Some ideas for Python pseudocode structure that would handle SPIIR search logic.
     from spiir.strain.psds import get_default_psds
     
     from spiir.search import gstlal_spiir, torch_spiir
-    from spiir.search.localisation import GWNet
+    from spiir.search.localisation import LocalisationNeuralNetwork
 
     # load initial conditions for spiir search pipeline
     psds = get_default_psds()
@@ -182,7 +182,7 @@ Some ideas for Python pseudocode structure that would handle SPIIR search logic.
 
     #  OR torch model on GPU
     device = torch.device("cuda")  # could be CPU too
-    model = pytorch.model(templates, psds, device=device)
+    model = torch_spiir.pipeline(templates, psds, device=device)
 
     # localisation model
     gwnet = LocalisationNeuralNetwork(device=device)
