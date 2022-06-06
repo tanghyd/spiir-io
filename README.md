@@ -34,14 +34,14 @@ handle SPIIR's `PostcohInspiralTable` in Python3 - in particular we have written
 to include this custom table in the list of available lsctables.
 
 As we have not integrated this with `python-ligo-lw` and `gwpy` modules directly,
-we have to add our table manually (see `spiir.io.ligolw.postcoh.py#L150`). In order for
+we have to add our table manually (see `spiir.utils.ligolw.postcoh.py#L150`). In order for
 modules like `gwpy` to recognise the `PostcohInspiralTable` schema, we must first import
 this package before `gwpy` as follows:
 
 Note: you may need to install `gwpy` and `pandas` in your virtual environment first.
 
     # import packages in correct order
-    import spiir.io.ligolw.postcoh
+    import spiir.utils.ligolw.postcoh
     import gwpy.table
 
     # load an EventTable with gwpy (kwarg format="ligolw" is handled automatically)
