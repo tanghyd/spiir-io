@@ -1,9 +1,6 @@
-import glue.ligolw  # legacy
-import ligo.lw.lsctables  # modern
+from ligo.lw import ligolw, lsctables, table, utils
 
 from lal import LIGOTimeGPS
-from xml.sax.xmlreader import AttributesImpl
-import six
 
 # TO DO:
 # - Unify approach for handling python-ligo-lw and glue.ligolw
@@ -14,29 +11,29 @@ import six
 # from glue.ligolw import dbtables
 # dbtables.ligolwtypes.ToPyType["ilwd:char"] = six.text_type
 
-PostcohInspiralID = glue.ligolw.ilwd.get_ilwdchar_class(u"postcoh", u"event_id")
+# PostcohInspiralID = utils.ilwd.get_ilwdchar_class(u"postcoh", u"event_id")
 
-class PostcohInspiralTable(glue.ligolw.table.Table):
+class PostcohInspiralTable(table.Table):
     tableName = "postcoh"
     validcolumns = {
-        "process_id": "ilwd:char",
-        "event_id": "ilwd:char",
+        "process_id": "int_8s",
+        "event_id": "int_8s",
         "end_time": "int_4s",
         "end_time_ns": "int_4s",
-        "end_time_sngl_L1": "int_4s",
-        "end_time_ns_sngl_L1": "int_4s",
         "end_time_sngl_H1": "int_4s",
         "end_time_ns_sngl_H1": "int_4s",
+        "end_time_sngl_L1": "int_4s",
+        "end_time_ns_sngl_L1": "int_4s",
         "end_time_sngl_V1": "int_4s",
         "end_time_ns_sngl_V1": "int_4s",
-        "snglsnr_L1": "real_4",
         "snglsnr_H1": "real_4",
+        "snglsnr_L1": "real_4",
         "snglsnr_V1": "real_4",
         "coaphase_L1": "real_4",
         "coaphase_H1": "real_4",
         "coaphase_V1": "real_4",
-        "chisq_L1": "real_4",
         "chisq_H1": "real_4",
+        "chisq_L1": "real_4",
         "chisq_V1": "real_4",
         "is_background": "int_4s",
         "livetime": "int_4s",
@@ -82,16 +79,16 @@ class PostcohInspiralTable(glue.ligolw.table.Table):
         "f_final": "real_4",
         "ra": "real_8",
         "dec": "real_8",
-        "deff_L1": "real_8",
         "deff_H1": "real_8",
+        "deff_L1": "real_8",
         "deff_V1": "real_8",
         "rank": "real_8",
     }
     constraints = "PRIMARY KEY (event_id)"
-    next_id = PostcohInspiralID(0)
+    # next_id = PostcohInspiralID(0)
 
 
-class PostcohInspiral(glue.ligolw.table.Table.RowType):
+class PostcohInspiral(table.Table.RowType):
     __slots__ = list(PostcohInspiralTable.validcolumns.keys())
 
     @property
@@ -137,7 +134,7 @@ def use_in(ContentHandler):
     # ContentHandler = table.use_in(ContentHandler)
 
     def startTable(self, parent, attrs, __orig_startTable=ContentHandler.startTable):
-        name = glue.ligolw.table.Table.TableName(attrs[u"Name"])
+        name = ligolw.Table.TableName(attrs[u"Name"])
         if name in TableByName:
             return TableByName[name](attrs)
         return __orig_startTable(self, parent, attrs)
@@ -151,8 +148,7 @@ def use_in(ContentHandler):
 # we should consider how these changes should be handled with python-ligo-lw
 
 # add our custom postcoh table to the lsctables.TableByName dict
-glue.ligolw.lsctables.TableByName.update(TableByName)
-ligo.lw.lsctables.TableByName.update(TableByName)
+lsctables.TableByName.update(TableByName)
 
 # Example:
 # >>> from glue.ligolw import lsctables

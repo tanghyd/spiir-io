@@ -1,0 +1,6 @@
+lalsuite
+astropy
+gwpy
+python-ligo-lw
+numpy
+pandas
