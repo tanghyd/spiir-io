@@ -2,6 +2,7 @@ import logging
 from collections.abc import Iterable
 from os import PathLike
 from tempfile import NamedTemporaryFile
+from typing import Union, Optional, Dict, List
 
 import pandas as pd
 import numpy as np
@@ -141,7 +142,7 @@ def strip_ilwdchar(xmldoc: ligo.lw.ligolw.Element) -> ligo.lw.ligolw.Element:
 
 
 def load_xmldoc(
-    path: str | bytes | PathLike,
+    path: Union[str, bytes, PathLike],
     ilwdchar_compat: bool=True,
     verbose: bool=False,
 ) -> ligo.lw.ligolw.Element:
@@ -182,12 +183,12 @@ def load_xmldoc(
 
 
 def load_postcoh_tables(
-    path: str | bytes | PathLike | Iterable[str | bytes | PathLike],
-    columns: list[str] | None = None,
+    path: Union[str, bytes, PathLike, Iterable],
+    columns: Optional[List[str]] = None,
     ilwdchar_compat: bool=True,
     verbose: bool=False,
     df: bool=True,
-) -> EventTable | pd.DataFrame:
+) -> Union[EventTable, pd.DataFrame]:
     """Loads one or multiple LIGO_LW XML Documents each containing PostcohInspiralTables
     using GWPy and returns a pandas DataFrame object.
 
@@ -265,7 +266,7 @@ def load_postcoh_tables(
     return event_table
 
 def load_ligolw_frequency_series(
-    path: str | bytes | PathLike, index: str = "frequency", *args, **kwargs
+    path: Union[str, bytes, PathLike], index: str = "frequency", *args, **kwargs
 ) -> pd.Series:
     """Reads a valid LIGO_LW XML Document from a file path and returns a pd.Series
     containing the real-valued frequency series associated with the specified kwargs.
@@ -305,11 +306,11 @@ def load_ligolw_frequency_series(
 
 
 def load_all_ligolw_snr_series(
-    path: str | bytes | PathLike,
+    path: Union[str, bytes, PathLike],
     add_epoch_time: bool = True,
     verbose: bool = False,
     ilwdchar_compat: bool = False,
-) -> dict[int, pd.Series]:
+) -> Dict[int, pd.Series]:
     """Reads a valid LIGO_LW XML Document from a file path and returns a dictionary
     containing the complex SNR timeseries arrays associated with each interferometer.
 
@@ -354,7 +355,7 @@ def load_all_ligolw_snr_series(
 def get_all_ligolw_snr_series_from_xmldoc(
     xmldoc: ligo.lw.ligolw.Element,
     add_epoch_time: bool = True,
-) -> dict[int, pd.Series]:
+) -> Dict[int, pd.Series]:
     """Reads a valid LIGO_LW XML Document from a ligo.lw.ligolw.Document object and
     returns a dictionary containing the complex SNR timeseries arrays associated with
     each interferometer ('ifo').

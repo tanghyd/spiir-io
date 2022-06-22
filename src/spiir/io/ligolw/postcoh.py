@@ -3,7 +3,6 @@ from ligo.lw import ligolw, lsctables, table, utils
 from lal import LIGOTimeGPS
 
 # TO DO:
-# - Unify approach for handling python-ligo-lw and glue.ligolw
 # - Port compatibility with C postcoh table
 # - Check compatibility with dbtables
 
@@ -107,10 +106,6 @@ class PostcohInspiral(table.Table.RowType):
 
 PostcohInspiralTable.RowType = PostcohInspiral
 
-# ref: glue.ligolw.lsctables
-# Override portions of a lsctables.LIGOLWContentHandler class
-#
-
 TableByName = {PostcohInspiralTable.tableName: PostcohInspiralTable}
 
 
@@ -142,19 +137,5 @@ def use_in(ContentHandler):
     ContentHandler.startTable = startTable
     return ContentHandler
 
-
-# the code below (gwpy and lsctables) should be improved, i.e. integrated directly
-# however, we also have the problem that we are using legacy glue.ligolw
-# we should consider how these changes should be handled with python-ligo-lw
-
 # add our custom postcoh table to the lsctables.TableByName dict
 lsctables.TableByName.update(TableByName)
-
-# Example:
-# >>> from glue.ligolw import lsctables
-# >>> "postcoh" in lsctables.TableByName
-# False
-# >>> import spiir.io.ligolw.postcoh
-# >>> "postcoh" in lsctables.TableByName
-# True
-
