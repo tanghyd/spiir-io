@@ -1,8 +1,8 @@
 # SPIIR Software Utilities Package
 
-Author: Daniel Tang
+Author: Daniel Tang [Last Updated: 06/06/2022]
 
-Last Updated: 25/03/22
+See the `spiir-O4-EW-development` branch to get postcoh table schemas matching the latest column names.
 
 ## Installation
 
