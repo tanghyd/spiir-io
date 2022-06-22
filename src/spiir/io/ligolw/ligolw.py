@@ -220,13 +220,19 @@ def load_postcoh_tables(
             file.seek(0)
             files.append(file)
         
-        # load each temp file into dataframe via gwpy
-        event_table = EventTable.read(
-            files,
-            format="ligolw",
-            tablename="postcoh",
-            verbose=verbose,
-        )
+            # construct keyword arguments for EventTable.read
+            kwargs = dict(
+                format="ligolw",
+                tablename="postcoh",
+                verbose=verbose
+            )
+
+            if columns is not None:
+                # NOTE: if columns is None, read fails
+                kwargs["columns"] = columns
+
+            # load each temp file into dataframe via gwpy
+            event_table = EventTable.read(files, **kwargs)
 
         for file in files:
             file.close()
@@ -241,12 +247,18 @@ def load_postcoh_tables(
             xmldoc.write(file)
             file.seek(0)
 
-            event_table = EventTable.read(
-                file,
+            # construct keyword arguments for EventTable
+            kwargs = dict(
                 format="ligolw",
                 tablename="postcoh",
-                verbose=verbose,
+                verbose=verbose
             )
+            if columns is not None:
+                # NOTE: if columns is None, read fails
+                kwargs["columns"] = columns
+
+            # load each temp file into dataframe via gwpy
+            event_table = EventTable.read(file, **kwargs)
     
     if df:
         return event_table.to_pandas()
