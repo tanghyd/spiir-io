@@ -2,8 +2,8 @@ import glue.ligolw  # legacy
 import ligo.lw.lsctables  # modern
 
 from lal import LIGOTimeGPS
-from xml.sax.xmlreader import AttributesImpl
-import six
+# from xml.sax.xmlreader import AttributesImpl
+# import six
 
 # TO DO:
 # - Unify approach for handling python-ligo-lw and glue.ligolw
@@ -14,9 +14,9 @@ import six
 # from glue.ligolw import dbtables
 # dbtables.ligolwtypes.ToPyType["ilwd:char"] = six.text_type
 
-PostcohInspiralID = glue.ligolw.ilwd.get_ilwdchar_class(u"postcoh", u"event_id")
+LegacyPostcohInspiralID = glue.ligolw.ilwd.get_ilwdchar_class(u"postcoh", u"event_id")
 
-class PostcohInspiralTable(glue.ligolw.table.Table):
+class LegacyPostcohInspiralTable(glue.ligolw.table.Table):
     tableName = "postcoh"
     validcolumns = {
         "process_id": "ilwd:char",
@@ -88,11 +88,11 @@ class PostcohInspiralTable(glue.ligolw.table.Table):
         "rank": "real_8",
     }
     constraints = "PRIMARY KEY (event_id)"
-    next_id = PostcohInspiralID(0)
+    next_id = LegacyPostcohInspiralID(0)
 
 
-class PostcohInspiral(glue.ligolw.table.Table.RowType):
-    __slots__ = list(PostcohInspiralTable.validcolumns.keys())
+class LegacyPostcohInspiral(glue.ligolw.table.Table.RowType):
+    __slots__ = list(LegacyPostcohInspiralTable.validcolumns.keys())
 
     @property
     def end(self):
@@ -108,13 +108,13 @@ class PostcohInspiral(glue.ligolw.table.Table.RowType):
             self.end_time, self.end_time_ns = gps.gpsSeconds, gps.gpsNanoSeconds
 
 
-PostcohInspiralTable.RowType = PostcohInspiral
+LegacyPostcohInspiralTable.RowType = LegacyPostcohInspiral
 
 # ref: glue.ligolw.lsctables
 # Override portions of a lsctables.LIGOLWContentHandler class
 #
 
-TableByName = {PostcohInspiralTable.tableName: PostcohInspiralTable}
+TableByName = {LegacyPostcohInspiralTable.tableName: LegacyPostcohInspiralTable}
 
 
 def use_in(ContentHandler):
