@@ -141,7 +141,7 @@ def strip_ilwdchar(xmldoc: ligo.lw.ligolw.Element) -> ligo.lw.ligolw.Element:
     return xmldoc
 
 
-def load_xmldoc(
+def load_ligolw_xmldoc(
     path: Union[str, bytes, PathLike],
     ilwdchar_compat: bool=True,
     verbose: bool=False,
@@ -182,8 +182,9 @@ def load_xmldoc(
     )
 
 
-def load_postcoh_tables(
-    path: Union[str, bytes, PathLike, Iterable],
+def load_ligolw_tables(
+    paths: Union[str, bytes, PathLike, Iterable],
+    table: str,
     columns: Optional[List[str]] = None,
     ilwdchar_compat: bool=True,
     verbose: bool=False,
@@ -209,12 +210,12 @@ def load_postcoh_tables(
     -------
     pd.DataFrame
     """
-    if isinstance(path, Iterable):
+    if isinstance(paths, Iterable):
         # load a list of xmldoc file paths into temp files
         files = []
-        for p in path:
+        for path in paths:
             file = NamedTemporaryFile(mode="w")
-            xmldoc = load_xmldoc(p, ilwdchar_compat, verbose)
+            xmldoc = load_ligolw_xmldoc(path, ilwdchar_compat, verbose)
             if ilwdchar_compat:
                 xmldoc = strip_ilwdchar(xmldoc)
             xmldoc.write(file)
@@ -224,7 +225,7 @@ def load_postcoh_tables(
             # construct keyword arguments for EventTable.read
             kwargs = dict(
                 format="ligolw",
-                tablename="postcoh",
+                tablename=table,
                 verbose=verbose
             )
 
@@ -240,7 +241,7 @@ def load_postcoh_tables(
 
     else:
         # load a single xmldoc
-        xmldoc = load_xmldoc(path, ilwdchar_compat, verbose)
+        xmldoc = load_ligolw_xmldoc(paths, ilwdchar_compat, verbose)
 
         with NamedTemporaryFile(mode="w") as file:
             if ilwdchar_compat:
@@ -251,7 +252,7 @@ def load_postcoh_tables(
             # construct keyword arguments for EventTable
             kwargs = dict(
                 format="ligolw",
-                tablename="postcoh",
+                tablename=table,
                 verbose=verbose
             )
             if columns is not None:
