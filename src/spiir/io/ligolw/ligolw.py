@@ -151,7 +151,7 @@ def load_ligolw_xmldoc(
 
     Parameters
     ----------
-    path: str | bytes | PathLike
+    paths: str | bytes | PathLike
         A path-like to a file containing a valid LIGO_LW XML Document.
     add_epoch_time: bool
         Whether to add the epoch time to each SNR series array for correct timestamps.
@@ -195,7 +195,7 @@ def load_ligolw_tables(
 
     Parameters
     ----------
-    path: str | bytes | PathLike | Iterable[str | bytes | PathLike]
+    paths: str | bytes | PathLike | Iterable[str | bytes | PathLike]
         A path or list of paths to LIGO_LW XML Document(s) each with a postcoh table.
     columns: list[str] | None = None
         A optional list of column names to filter and read in from each postcoh table.
@@ -222,19 +222,19 @@ def load_ligolw_tables(
             file.seek(0)
             files.append(file)
         
-            # construct keyword arguments for EventTable.read
-            kwargs = dict(
-                format="ligolw",
-                tablename=table,
-                verbose=verbose
-            )
+        # construct keyword arguments for EventTable.read
+        kwargs = dict(
+            format="ligolw",
+            tablename=table,
+            verbose=verbose
+        )
 
-            if columns is not None:
-                # NOTE: if columns is None, read fails
-                kwargs["columns"] = columns
+        if columns is not None:
+            # NOTE: if columns is None, read fails
+            kwargs["columns"] = columns
 
-            # load each temp file into dataframe via gwpy
-            event_table = EventTable.read(files, **kwargs)
+        # load each temp file into dataframe via gwpy
+        event_table = EventTable.read(files, **kwargs)
 
         for file in files:
             file.close()
