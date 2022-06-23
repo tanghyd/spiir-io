@@ -348,7 +348,7 @@ def load_all_ligolw_snr_series(
         and the values contain the respective SNR timeseries array
         (each with their own timestamped indices).
     """
-    xmldoc = load_xmldoc(path, ilwdchar_compat, verbose)
+    xmldoc = load_ligolw_xmldoc(path, ilwdchar_compat, verbose)
 
     return get_all_ligolw_snr_series_from_xmldoc(xmldoc, add_epoch_time)
 
